@@ -71,7 +71,7 @@ import org.junit.runner.Description;
 
 public class WorkflowTestingTest {
 
-  @Rule public Timeout globalTimeout = Timeout.seconds(5);
+  @Rule public Timeout globalTimeout = Timeout.seconds(10);
 
   @Rule
   public TestWatcher watchman =
@@ -689,6 +689,7 @@ public class WorkflowTestingTest {
     } catch (WorkflowException e) {
       assertTrue(e.getCause() instanceof ChildWorkflowTimedOutException);
     }
+
     // List closed workflows and validate their types
     ListClosedWorkflowExecutionsRequest listRequest =
         new ListClosedWorkflowExecutionsRequest().setDomain(testEnvironment.getDomain());
