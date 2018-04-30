@@ -27,7 +27,6 @@ googleJavaFormat {
     toolVersion '1.5'
     include '**/*.java'
     exclude '**/generated-sources/*'
-    exclude 'thrift-*/*'
 }
 
 group = 'com.uber'
@@ -56,17 +55,6 @@ license {
 
 compileJava {
     dependsOn 'googleJavaFormat'
-    options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XepExcludedPaths:" +
-            ".*/generated-sources/.*"
-}
-
-license {
-    header = project.file('license-header.txt')
-    exclude '**/com/uber/cadence/*.java'
-}
-
-compileTestJava {
     options.encoding = 'UTF-8'
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XepExcludedPaths:" +
             ".*/generated-sources/.*"
