@@ -1,1 +1,8 @@
 language: java
+
+addons:
+  apt:
+    sources:
+    - debian-sid
+    packages:
+    - thrift-compiler
