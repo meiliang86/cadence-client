@@ -54,6 +54,8 @@ import com.uber.cadence.workflow.Promise;
 import com.uber.cadence.workflow.SignalMethod;
 import com.uber.cadence.workflow.Workflow;
 import com.uber.cadence.workflow.WorkflowMethod;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -68,20 +70,37 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.rules.Timeout;
 import org.junit.runner.Description;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorkflowTestingTest {
+  private static final Logger log = LoggerFactory.getLogger(WorkflowTestingTest.class);
 
-  @Rule public Timeout globalTimeout = Timeout.seconds(10);
+  @Rule public Timeout globalTimeout = Timeout.seconds(5);
 
   @Rule
   public TestWatcher watchman =
       new TestWatcher() {
         @Override
         protected void failed(Throwable e, Description description) {
-          System.out.println("Test failed");
-          System.out.println(testEnvironment.getDiagnostics());
+          log.info("Test failed.", e);
+          log.info(testEnvironment.getDiagnostics());
+          log.info(getThreadDumps());
         }
       };
+
+  public static String getThreadDumps()
+  {
+    ThreadInfo[]  threadInfos = ManagementFactory.getThreadMXBean()
+        .dumpAllThreads(true,
+            true);
+    StringBuilder dump        = new StringBuilder();
+    dump.append(String.format("%n"));
+    for (ThreadInfo threadInfo : threadInfos) {
+      dump.append(threadInfo);
+    }
+    return dump.toString();
+  }
 
   private static final String TASK_LIST = "test-workflow";
 
@@ -470,7 +489,7 @@ public class WorkflowTestingTest {
     CompletableFuture<String> result = WorkflowClient.execute(workflow::workflow1, "input1");
     workflow.ProcessSignal("signalInput");
     assertEquals("signalInput-input1", result.get());
-    System.out.println(testEnvironment.getDiagnostics());
+    log.info(testEnvironment.getDiagnostics());
   }
 
   public interface TestCancellationActivity {
