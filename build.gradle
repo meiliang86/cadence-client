@@ -27,6 +27,7 @@ googleJavaFormat {
     toolVersion '1.5'
     include '**/*.java'
     exclude '**/generated-sources/*'
+    exclude 'thrift-*/*'
 }
 
 group = 'com.uber'
