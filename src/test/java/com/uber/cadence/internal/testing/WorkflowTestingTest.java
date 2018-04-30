@@ -85,7 +85,7 @@ public class WorkflowTestingTest {
 
   private static final String TASK_LIST = "test-workflow";
 
-  private static TestWorkflowEnvironment testEnvironment;
+  private TestWorkflowEnvironment testEnvironment;
 
   @Before
   public void setUp() {
