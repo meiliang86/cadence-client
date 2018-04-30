@@ -78,7 +78,8 @@ public class WorkflowTestingTest {
       new TestWatcher() {
         @Override
         protected void failed(Throwable e, Description description) {
-          System.err.println(testEnvironment.getDiagnostics());
+          System.out.println("Test failed");
+          System.out.println(testEnvironment.getDiagnostics());
         }
       };
 
