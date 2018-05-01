@@ -1,6 +1,7 @@
 buildscript {
     dependencies {
         classpath "gradle.plugin.org.jruyi.gradle:thrift-gradle-plugin:0.4.0"
+        classpath 'net.researchgate:gradle-release:2.6.0'
     }
 }
 
@@ -22,6 +23,7 @@ apply plugin: 'maven'
 apply plugin: "org.jruyi.thrift"
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.sherter.google-java-format'
+apply plugin: 'net.researchgate.release'
 
 googleJavaFormat {
     toolVersion '1.5'
@@ -29,8 +31,8 @@ googleJavaFormat {
     exclude '**/generated-sources/*'
 }
 
-group = 'com.uber'
-version = '0.2.0-SNAPSHOT'
+group = 'com.uber.com'
+version = '0.2.1-SNAPSHOT'
 
 description = """Uber Cadence Java Client"""
 
@@ -101,5 +103,19 @@ test {
         exceptionFormat "full"
         // Uncomment the following line if you want to see test logs in gradlew run.
         // showStandardStreams true
+    }
+}
+
+release {
+    scmAdapters = [
+            net.researchgate.release.GitAdapter,
+    ]
+
+    git {
+        requireBranch = 'release'
+        pushToRemote = 'liang'
+        pushToBranchPrefix = ''
+        commitVersionFileOnly = false
+        signTag = false
     }
 }
