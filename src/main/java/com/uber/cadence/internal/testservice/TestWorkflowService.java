@@ -174,6 +174,8 @@ public final class TestWorkflowService implements IWorkflowService {
   StartWorkflowExecutionResponse startWorkflowExecutionImpl(
       StartWorkflowExecutionRequest startRequest, Optional<TestWorkflowMutableState> parent)
       throws BadRequestError, WorkflowExecutionAlreadyStartedError, InternalServiceError {
+    System.out.println("Beginning of startWorkflowExecutionImpl");
+
     String requestWorkflowId = requireNotNull("WorkflowId", startRequest.getWorkflowId());
     String domain = requireNotNull("Domain", startRequest.getDomain());
     WorkflowId workflowId = new WorkflowId(domain, requestWorkflowId);
@@ -203,6 +205,7 @@ public final class TestWorkflowService implements IWorkflowService {
       Optional<TestWorkflowMutableState> parent,
       WorkflowId workflowId)
       throws InternalServiceError, BadRequestError {
+    System.out.println("Beginning of startWorkflowExecutionNoRunningCheck");
     String domain = startRequest.getDomain();
     TestWorkflowMutableState result =
         new TestWorkflowMutableStateImpl(startRequest, parent, this, store);

@@ -774,13 +774,19 @@ class TestWorkflowMutableStateImpl implements TestWorkflowMutableState {
 
   @Override
   public void startWorkflow() throws InternalServiceError, BadRequestError {
+    System.out.println("Beginning of TestWorkflowMutableStateImpl.startWorkflow");
+
     try {
       update(
           ctx -> {
+            System.out.println("Before TestWorkflowMutableStateImpl.scheduleDecision");
+
             workflow.action(StateMachines.Action.START, ctx, startRequest, 0);
             scheduleDecision(ctx);
             ctx.addTimer(
                 startRequest.getExecutionStartToCloseTimeoutSeconds(), this::timeoutWorkflow);
+            System.out.println("After TestWorkflowMutableStateImpl.scheduleDecision");
+
           });
     } catch (EntityNotExistsError entityNotExistsError) {
       throw new InternalServiceError(Throwables.getStackTraceAsString(entityNotExistsError));
@@ -795,11 +801,17 @@ class TestWorkflowMutableStateImpl implements TestWorkflowMutableState {
           .execute(
               () -> {
                 try {
+                  System.out.println("Before TestWorkflowMutableStateImpl.childWorkflowStarted");
+
                   parent.get().childWorkflowStarted(a);
+                  System.out.println("After TestWorkflowMutableStateImpl.childWorkflowStarted");
+
                 } catch (EntityNotExistsError entityNotExistsError) {
                   // Not a problem. Parent might just close by now.
+                  System.out.println("Failure reporting child completion " + entityNotExistsError.toString());
                 } catch (BadRequestError | InternalServiceError e) {
                   log.error("Failure reporting child completion", e);
+                  System.out.println("Failure reporting child completion " + e.toString());
                 }
               });
     }

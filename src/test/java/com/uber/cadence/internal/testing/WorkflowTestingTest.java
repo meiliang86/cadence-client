@@ -85,7 +85,7 @@ public class WorkflowTestingTest {
         protected void failed(Throwable e, Description description) {
           System.out.println("Test failed.");
           System.out.println(testEnvironment.getDiagnostics());
-          System.out.println(getThreadDumps());
+//          System.out.println(getThreadDumps());
         }
       };
 

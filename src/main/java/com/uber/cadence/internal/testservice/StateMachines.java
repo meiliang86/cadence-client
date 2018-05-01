@@ -425,8 +425,10 @@ class StateMachines {
         .execute(
             () -> {
               try {
+                System.out.println("Before addStartChildTask");
                 data.service.startWorkflowExecutionImpl(
                     startChild, Optional.of(ctx.getWorkflowMutableState()));
+                System.out.println("After addStartChildTask");
               } catch (WorkflowExecutionAlreadyStartedError workflowExecutionAlreadyStartedError) {
                 StartChildWorkflowExecutionFailedEventAttributes failRequest =
                     new StartChildWorkflowExecutionFailedEventAttributes()
