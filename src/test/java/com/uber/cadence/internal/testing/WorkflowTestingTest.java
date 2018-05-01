@@ -62,6 +62,7 @@ import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import org.apache.thrift.TException;
 import org.junit.After;
 import org.junit.Before;
@@ -85,13 +86,14 @@ public class WorkflowTestingTest {
         protected void failed(Throwable e, Description description) {
           System.out.println("Test failed.");
           System.out.println(testEnvironment.getDiagnostics());
-          System.out.println(getThreadDumps());
+//          System.out.println(getThreadDumps());
         }
       };
 
   static {
     String parallelism = System.getProperty("java.util.concurrent.ForkJoinPool.common.parallelism");
-    System.out.println("parallelism " + parallelism);
+    System.out.println("parallelism " + ForkJoinPool.commonPool().getParallelism());
+    System.out.println("pool size " + ForkJoinPool.commonPool().getPoolSize());
     System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "10");
   }
 
