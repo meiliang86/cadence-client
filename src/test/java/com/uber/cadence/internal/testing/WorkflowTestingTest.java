@@ -85,16 +85,19 @@ public class WorkflowTestingTest {
         protected void failed(Throwable e, Description description) {
           System.out.println("Test failed.");
           System.out.println(testEnvironment.getDiagnostics());
-//          System.out.println(getThreadDumps());
+          System.out.println(getThreadDumps());
         }
       };
 
-  public static String getThreadDumps()
-  {
-    ThreadInfo[]  threadInfos = ManagementFactory.getThreadMXBean()
-        .dumpAllThreads(true,
-            true);
-    StringBuilder dump        = new StringBuilder();
+  static {
+    String parallelism = System.getProperty("java.util.concurrent.ForkJoinPool.common.parallelism");
+    System.out.println("parallelism " + parallelism);
+    System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "10");
+  }
+
+  public static String getThreadDumps() {
+    ThreadInfo[] threadInfos = ManagementFactory.getThreadMXBean().dumpAllThreads(true, true);
+    StringBuilder dump = new StringBuilder();
     dump.append(String.format("%n"));
     for (ThreadInfo threadInfo : threadInfos) {
       dump.append(threadInfo);

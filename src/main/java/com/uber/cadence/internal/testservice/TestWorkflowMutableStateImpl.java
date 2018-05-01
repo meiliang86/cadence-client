@@ -786,12 +786,12 @@ class TestWorkflowMutableStateImpl implements TestWorkflowMutableState {
             ctx.addTimer(
                 startRequest.getExecutionStartToCloseTimeoutSeconds(), this::timeoutWorkflow);
             System.out.println("After TestWorkflowMutableStateImpl.scheduleDecision");
-
           });
     } catch (EntityNotExistsError entityNotExistsError) {
       throw new InternalServiceError(Throwables.getStackTraceAsString(entityNotExistsError));
     }
     if (parent.isPresent()) {
+      System.out.println("parent.isPresent = true");
       ChildWorkflowExecutionStartedEventAttributes a =
           new ChildWorkflowExecutionStartedEventAttributes()
               .setWorkflowExecution(getExecutionId().getExecution())
@@ -808,7 +808,8 @@ class TestWorkflowMutableStateImpl implements TestWorkflowMutableState {
 
                 } catch (EntityNotExistsError entityNotExistsError) {
                   // Not a problem. Parent might just close by now.
-                  System.out.println("Failure reporting child completion " + entityNotExistsError.toString());
+                  System.out.println(
+                      "Failure reporting child completion " + entityNotExistsError.toString());
                 } catch (BadRequestError | InternalServiceError e) {
                   log.error("Failure reporting child completion", e);
                   System.out.println("Failure reporting child completion " + e.toString());
