@@ -76,7 +76,7 @@ public final class Poller<T> implements SuspendableWorker {
   @Override
   public void start() {
     if (log.isInfoEnabled()) {
-      log.info("start(): " + toString());
+      log.info("Starting poller: " + toString());
     }
     if (pollerOptions.getMaximumPollRatePerSecond() > 0.0) {
       pollRateThrottler =

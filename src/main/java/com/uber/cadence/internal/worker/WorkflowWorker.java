@@ -279,6 +279,7 @@ public final class WorkflowWorker
         taskCompleted.setIdentity(options.getIdentity());
         taskCompleted.setTaskToken(taskToken);
         Retryer.retry(ro, () -> service.RespondDecisionTaskCompleted(taskCompleted));
+        log.debug("Decision task is completed. RespondDecisionTaskCompletedRequest={}", taskCompleted);
       } else {
         RespondDecisionTaskFailedRequest taskFailed = response.getTaskFailed();
         if (taskFailed != null) {

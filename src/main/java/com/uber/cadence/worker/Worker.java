@@ -72,7 +72,6 @@ public final class Worker {
   private final AtomicBoolean started = new AtomicBoolean();
   private final DeciderCache cache;
   private final String stickyTaskListName;
-  private ThreadPoolExecutor threadPoolExecutor;
 
   /**
    * Creates worker that connects to an instance of the Cadence Service.
@@ -99,10 +98,10 @@ public final class Worker {
         !Strings.isNullOrEmpty(domain), "domain should not be an empty string");
     Preconditions.checkArgument(
         !Strings.isNullOrEmpty(taskList), "taskList should not be an empty string");
+    Objects.requireNonNull(threadPoolExecutor);
+
     this.cache = cache;
     this.stickyTaskListName = stickyTaskListName;
-    this.threadPoolExecutor = Objects.requireNonNull(threadPoolExecutor);
-
     this.taskList = taskList;
     this.options = MoreObjects.firstNonNull(options, new WorkerOptions.Builder().build());
 
@@ -125,7 +124,7 @@ public final class Worker {
                 this.cache,
                 this.stickyTaskListName,
                 stickyDecisionScheduleToStartTimeout,
-                this.threadPoolExecutor);
+                threadPoolExecutor);
   }
 
   private static SingleWorkerOptions toActivityOptions(
@@ -469,6 +468,12 @@ public final class Worker {
       this.cache = new DeciderCache(this.factoryOptions.cacheMaximumSize, metricsScope);
 
       dispatcher = new PollDecisionTaskDispatcher(workflowService);
+
+      PollerOptions stickyPollerOptions =
+          new PollerOptions.Builder(factoryOptions.stickyWorkflowPollerOptions)
+              .setPollThreadNamePrefix("Sticky Poller domain=\"" + domain + "\", type=\"sticky\"")
+              .build();
+
       stickyPoller =
           new Poller<>(
               id.toString(),
@@ -476,7 +481,7 @@ public final class Worker {
                       workflowService, domain, getStickyTaskListName(), metricsScope, id.toString())
                   .get(),
               dispatcher,
-              this.factoryOptions.stickyWorkflowPollerOptions,
+              stickyPollerOptions,
               metricsScope);
     }
 

@@ -107,13 +107,13 @@ public final class ReplayDecisionTaskHandler implements DecisionTaskHandler {
   private Result handleDecisionTaskImpl(PollForDecisionTaskResponse decisionTask) throws Throwable {
 
     if (decisionTask.isSetQuery()) {
-      return processQuery(decisionTask);
+      return processQueryTask(decisionTask);
     } else {
-      return processDecision(decisionTask);
+      return processDecisionTask(decisionTask);
     }
   }
 
-  private Result processDecision(PollForDecisionTaskResponse decisionTask) throws Throwable {
+  private Result processDecisionTask(PollForDecisionTaskResponse decisionTask) throws Throwable {
     Decider decider = null;
     try {
       decider =
@@ -158,7 +158,7 @@ public final class ReplayDecisionTaskHandler implements DecisionTaskHandler {
     }
   }
 
-  private Result processQuery(PollForDecisionTaskResponse decisionTask) {
+  private Result processQueryTask(PollForDecisionTaskResponse decisionTask) {
     RespondQueryTaskCompletedRequest queryCompletedRequest = new RespondQueryTaskCompletedRequest();
     queryCompletedRequest.setTaskToken(decisionTask.getTaskToken());
     Decider decider = null;
